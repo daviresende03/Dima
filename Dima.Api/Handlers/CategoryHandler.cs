@@ -32,9 +32,24 @@ namespace Dima.Api.Handlers
             }
         }
 
-        public Task<Response<Category?>> DeleteAsync(DeleteCategoryRequest request)
+        public async Task<Response<Category?>> DeleteAsync(DeleteCategoryRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
+
+                if (category is null)
+                    return new Response<Category?>(null, (int)HttpStatusCode.NotFound, "Category not found");
+
+                context.Categories.Remove(category);
+                await context.SaveChangesAsync();
+
+                return new Response<Category?>(category, message: "Category successfully deleted");
+            }
+            catch (Exception ex)
+            {
+                return new Response<Category?>(null, (int)HttpStatusCode.InternalServerError, "An error occurred while deleting a category");
+            }
         }
 
         public Task<Response<List<Category>>> GetAllAsync(GetAllCategoriesRequest request)
