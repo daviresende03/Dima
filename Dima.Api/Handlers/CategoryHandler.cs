@@ -52,21 +52,42 @@ namespace Dima.Api.Handlers
             }
         }
 
-        public Task<Response<List<Category>>> GetAllAsync(GetAllCategoriesRequest request)
+        public async Task<PagedResponse<List<Category>?>> GetAllAsync(GetAllCategoriesRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = context.Categories
+                    .AsNoTracking()
+                    .Where(x => x.UserId == request.UserId)
+                    .OrderBy(x => x.Title);
+
+                var categories = await query
+                    .Skip((request.PageNumber - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .ToListAsync();
+
+                var count = await query
+                    .CountAsync();
+
+                return new PagedResponse<List<Category>?>(categories, count, request.PageNumber, request.PageSize);
+            }
+            catch (Exception ex)
+            {
+                return new PagedResponse<List<Category>?>(null, (int)HttpStatusCode.InternalServerError, "An error occurred while searching categories");
+            }
         }
 
         public async Task<Response<Category?>> GetByIdAsync(GetCategoryByIdRequest request)
         {
             try
             {
-                var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
+                var category = await context.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
 
-                if (category is null)
-                    return new Response<Category?>(null, (int)HttpStatusCode.NotFound, "Category not found");
-
-                return new Response<Category?>(category);
+                return category is null ?
+                    new Response<Category?>(null, (int)HttpStatusCode.NotFound, "Category not found") :
+                    new Response<Category?>(category);
             }
             catch (Exception ex)
             {
