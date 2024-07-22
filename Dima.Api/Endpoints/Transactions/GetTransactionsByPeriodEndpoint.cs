@@ -2,34 +2,37 @@
 using Dima.Core;
 using Dima.Core.Handlers;
 using Dima.Core.Models;
-using Dima.Core.Requests.Categories;
+using Dima.Core.Requests.Transactions;
 using Dima.Core.Responses;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dima.Api.Endpoints.Categories
+namespace Dima.Api.Endpoints.Transactions
 {
-    public class GetAllCategoriesEndpoint : IEndpoint
+    public class GetTransactionsByPeriodEndpoint : IEndpoint
     {
         public static void Map(IEndpointRouteBuilder app)
             => app.MapGet("/", HandleAsync)
-            .WithName("Categories: Get All")
-            .WithSummary("Search a list of categories")
+            .WithName("Transactions: Get by period")
+            .WithSummary("Search a list of transactions")
             .WithOrder(5)
-            .Produces<Response<List<Category>?>>();
+            .Produces<Response<Transaction?>>();
 
         private static async Task<IResult> HandleAsync(
-            ICategoryHandler handler,
+            ITransactionHandler handler,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int pageNumber = Configuration.DefaultPageNumber,
             [FromQuery] int pageSize = Configuration.DefaultPageSize)
         {
-            var request = new GetAllCategoriesRequest
+            var request = new GetTransactionsByPeriodRequest
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
+                StartDate = startDate,
+                EndDate = endDate,
                 //UserId = 
             };
-            
-            var result = await handler.GetAllAsync(request);
+            var result = await handler.GetByPeriodAsync(request);
 
             return result.IsSuccess ?
                 TypedResults.Ok(result) :
