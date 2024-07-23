@@ -1,6 +1,6 @@
 ﻿namespace Dima.Core.Requests.Account
 {
-    public class LoginRequest : BaseRequest
+    public class LoginRequest : RegisterRequest
     {
 
     }

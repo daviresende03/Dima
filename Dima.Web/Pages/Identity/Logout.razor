@@ -1,0 +1,22 @@
+﻿@page "/logout"
+@layout HeadlessLayout
+@inherits LogoutPage
+
+<PageTitle>Dima - Logout</PageTitle>
+
+<MudText Typo="Typo.h3">Exiting...</MudText>
+<MudPaper Class="pa-8 mt-4">
+    <div class="d-flex justify-center pb-8 pt-8">
+        <MudImage Src="images/dima.png"
+                  Alt="Dima - Finances"
+                  Width="200" />
+    </div>
+    <MudAlert Severity="Severity.Info">
+        <div>
+            Session ended...
+            <MudButton Variant="Variant.Text" Href="/">
+                Go to login
+            </MudButton>
+        </div>
+    </MudAlert>
+</MudPaper>
