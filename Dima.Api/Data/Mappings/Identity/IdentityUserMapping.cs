@@ -17,7 +17,9 @@ namespace Dima.Api.Data.Mappings.Identity
 
             builder.Property(x => x.Email).HasMaxLength(180);
             builder.Property(x => x.NormalizedEmail).HasMaxLength(180);
-            builder.Property(x => x.UserName).HasMaxLength(180);
+            builder.Property(x => x.UserName)
+                .IsRequired()
+                .HasMaxLength(180);
             builder.Property(x => x.NormalizedUserName).HasMaxLength(180);
             builder.Property(x => x.PhoneNumber).HasMaxLength(20);
             builder.Property(x => x.ConcurrencyStamp).IsConcurrencyToken();
