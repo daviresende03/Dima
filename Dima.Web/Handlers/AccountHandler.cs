@@ -1,7 +1,9 @@
 ﻿using Dima.Core.Handlers;
 using Dima.Core.Requests.Account;
 using Dima.Core.Responses;
+using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace Dima.Web.Handlers
 {
@@ -12,18 +14,22 @@ namespace Dima.Web.Handlers
         {
             var result = await _client.PostAsJsonAsync("v1/identity/login?useCookies=true", request);
             return result.IsSuccessStatusCode ?
-                new Response<string>("You are successfully logged in") :
-                new Response<string>(null, (int)result.StatusCode, "Username or password incorrect");
+                new Response<string>("You are successfully logged in", (int)HttpStatusCode.OK, "You are successfully logged in") :
+                new Response<string>(null, (int)HttpStatusCode.BadRequest, "Username or password incorrect");
         }
 
-        public Task LogoutAsync()
+        public async Task LogoutAsync()
         {
-            throw new NotImplementedException();
+            var emptyContent = new StringContent("{}", Encoding.UTF8, "application/json");
+            await _client.PostAsync("v1/identity/logout", emptyContent);
         }
 
-        public Task<Response<string>> RegisterAsync(RegisterRequest request)
+        public async Task<Response<string>> RegisterAsync(RegisterRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _client.PostAsJsonAsync("v1/identity/register", request);
+            return result.IsSuccessStatusCode ?
+                new Response<string>("Registered successfully", (int)HttpStatusCode.OK, "Registered successfully") :
+                new Response<string>(null, (int)HttpStatusCode.BadRequest, "Unable to register");
         }
     }
 }
