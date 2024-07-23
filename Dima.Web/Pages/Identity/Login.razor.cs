@@ -47,7 +47,11 @@ namespace Dima.Web.Pages.Identity
             {
                 var result = await Handler.LoginAsync(InputModel);
                 if (result.IsSuccess)
+                {
+                    await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                    AuthenticationStateProvider.NotifyAuthenticationStateChanged();
                     NavigationManager.NavigateTo("/");
+                }
                 else
                     SnackBar.Add(result.Message, Severity.Error);
             }
