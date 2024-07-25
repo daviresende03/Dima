@@ -1,0 +1,41 @@
+﻿@page "/categories/edit/{id}"
+@inherits EditCategoryBase
+
+<PageTitle>Dima - Edit Category</PageTitle>
+
+<MudText Typo="Typo.h3">Edit Category</MudText>
+@if (IsBusy)
+{
+    <MudPaper Class="pa-8 mt-4">
+        <MudSkeleton Height="55px" />
+        <MudSkeleton Height="110px" />
+        <MudSkeleton Height="55px" />
+        <MudSkeleton Height="110px" />
+        <MudSkeleton Height="55px" />
+    </MudPaper>
+}
+else
+{
+    <MudPaper Class="pa-8 mt-4">
+        <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync">
+            <DataAnnotationsValidator />
+
+            <MudTextField Label="Title"
+                          HelperText="Required"
+                          @bind-Value="InputModel.Title"
+                          For="@(() => InputModel.Title)" />
+
+            <MudTextField Label="Description"
+                          Lines="5"
+                          HelperText="Required"
+                          @bind-Value="InputModel.Description"
+                          For="@(() => InputModel.Description)" />
+
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary">
+                Save
+            </MudButton>
+        </EditForm>
+    </MudPaper>
+}
