@@ -9,7 +9,7 @@ namespace Dima.Core.Requests.Transactions
         public string Title { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Invalid type")]
-        public ETransactionType Type { get; set; }
+        public ETransactionType Type { get; set; } = ETransactionType.Withdrawal;
 
         [Required(ErrorMessage = "Invalid amount")]
         public decimal Amount { get; set; }

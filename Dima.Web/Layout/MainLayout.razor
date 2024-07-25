@@ -16,6 +16,10 @@
                     OnClick="() => ToggleDrawer()"/>
                 Dima
                 <MudSpacer />
+                <MudButton Href="/transactions/new"
+                    Variant="Variant.Text" StartIcon="@Icons.Material.TwoTone.Add">
+                    New Transaction
+                </MudButton>
                 <MudText Typo="Typo.caption">
                     @context.User.Identity?.Name
                 </MudText>
